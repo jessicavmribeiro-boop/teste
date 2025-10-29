@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nathalia Eloy</title>
+    
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="brand - Copia.png" alt="Nathalia Eloy" class="header-image">
+        </div>
+        
+        <div class="content">
+            <div class="calendar-container">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="booking-summary">
+                <h2>Solicitar Agendamento</h2>
+                
+                <div class="service-selection" id="service-selection">
+                    <h3>Serviços Disponíveis</h3>
+                    <!-- Serviços carregados dinamicamente -->
+                </div>
+
+                <div class="booking-details">
+                    <h2>Seu Agendamento</h2>
+                    <p><strong id="selected-date">Data: --/--/----</strong></p>
+                    <p><strong id="selected-time">Horário: --:--</strong></p>
+                    <p><strong id="selected-service">Serviços: Nenhum selecionado</strong></p>
+                    <p><strong id="selected-price">Preço Total: R$ 0,00</strong></p>
+                    
+                    <div class="status-info status-solicitado" style="display: none;" id="status-info">
+                        <p>📋 Status: <strong>Solicitação Enviada</strong></p>
+                        <p>⏳ Aguardando confirmação do salão</p>
+                    </div>
+                </div>
+
+                <button class="book-btn" id="book-btn" disabled onclick="openBookingModal()">
+                  Solicitar Agendamento
+                </button>
+
+                <div class="instructions">
+                    <h3>ℹ️ Como fazer seu agendamento:</h3>
+                    <p>1. Escolha os serviços desejados</p>
+                    <p>2. Selecione uma data e horário disponíveis no calendário</p>
+                    <p>3. Preencha seus dados de contato</p>
+                    <p>4. Envie sua solicitação de agendamento</p>
+                    <p>5. Aguarde nossa confirmação por WhatsApp</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Solicitação -->
+    <div class="modal" id="booking-modal">
+        <div class="modal-content">
+            <h2>Solicitar Agendamento</h2>
+            <p style="margin-bottom: 20px; color: #666;">Preencha seus dados para solicitar este horário</p>
+            
+            <div class="form-group">
+                <label for="client-name">Seu Nome *</label>
+                <input type="text" id="client-name" placeholder="Digite seu nome completo" required>
+            </div>
+            <div class="form-group">
+                <label for="client-phone">WhatsApp *</label>
+                <input type="tel" id="client-phone" placeholder="(00) 00000-0000" required>
+            </div>
+            <div class="form-group">
+                <label for="client-email">E-mail (opcional)</label>
+                <input type="email" id="client-email" placeholder="seuemail@exemplo.com">
+            </div>
+            
+            <div class="booking-summary-modal">
+                <h3>Resumo da Solicitação</h3>
+                <p id="modal-date">Data: --/--/----</p>
+                <p id="modal-time">Horário: --:--</p>
+                <p id="modal-service">Serviços: --</p>
+                <p id="modal-price">Preço Total: R$ 0,00</p>
+            </div>
+            
+            <div class="modal-buttons">
+             <button class="modal-btn cancel" onclick="closeBookingModal()">Cancelar</button>
+             <button class="modal-btn confirm" onclick="solicitarAgendamento()">Enviar Solicitação</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cliente -->
+    <div class="modal" id="cliente-modal">
+        <div class="modal-content">
+            <h2 id="cliente-modal-titulo">Cadastro do Cliente</h2>
+            
+            <div id="cliente-existente" style="display: none;">
+                <div class="cliente-cumprimento">
+                    <h4>👋 Olá, <span id="cliente-nome-cumprimento"></span>!</h4>
+                    <p>Encontramos seu cadastro. Confirme seus dados:</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente-telefone">WhatsApp *</label>
+                <input type="tel" id="cliente-telefone" placeholder="(11) 99999-9999" required>
+                <small>Este número será usado para confirmar seus agendamentos</small>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente-nome">Nome *</label>
+                <input type="text" id="cliente-nome" placeholder="Seu nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente-sobrenome">Sobrenome *</label>
+                <input type="text" id="cliente-sobrenome" placeholder="Seu sobrenome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente-aniversario">Data de Aniversário (opcional)</label>
+                <input type="date" id="cliente-aniversario">
+                <small>Vamos te surpreender no seu aniversário! 🎂</small>
+            </div>
+
+            <div class="modal-buttons">
+             <button class="modal-btn cancel" onclick="fecharModalCliente()">Cancelar</button>
+             <button class="modal-btn confirm" onclick="confirmarCliente()">Confirmar e Continuar</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <h2>🔐 Acesso Restrito</h2>
+            <p style="margin-bottom: 20px; color: #666;">Digite a senha para acessar o painel</p>
+            
+            <div class="form-group">
+                <label for="admin-password">Senha:</label>
+                <input type="password" id="admin-password" placeholder="Digite a senha">
+            </div>
+            
+            <div id="login-error" style="display: none;">
+                Senha incorreta! Tente novamente.
+            </div>
+            
+            <div class="modal-buttons">
+             <button class="modal-btn cancel" onclick="closeLoginModal()">Cancelar</button>
+              <button class="modal-btn confirm" onclick="checkPassword()">Acessar</button>
+              </div>
+        </div>
+    </div>
+
+    <!-- Painel Admin -->
+    <div class="modal" id="admin-panel">
+        <div class="modal-content admin-panel-content">
+            <div class="admin-header">
+                <h2>🎛️ Painel de Controle - Nathalia Eloy</h2>
+                <div class="admin-buttons">
+                    <button class="btn-danger" id="btn-logout">🚪 Sair</button>
+                    <button class="btn-secondary" id="btn-close-admin">❌ Fechar</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="solicitacoes">📋 Solicitações</button>
+                <button class="tab-btn" data-tab="agenda">📅 Minha Agenda</button>
+                <button class="tab-btn" data-tab="horarios">⏰ Horários</button>
+                <button class="tab-btn" data-tab="servicos">💅 Serviços</button>
+                <button class="tab-btn" data-tab="aniversariantes">🎂 Aniversariantes</button>
+                <button class="tab-btn" data-tab="config">⚙️ Configurações</button>
+            </div>
+
+            <div id="tab-content">
+                <!-- Conteúdo carregado dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante Admin -->
+    <div class="admin-float-btn" onclick="openLoginModal()" title="Painel de Controle">
+    🎛️
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js'></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/calendar.js"></script>    
+    <script src="js/admin.js"></script>
+    
+</body>
+</html>
